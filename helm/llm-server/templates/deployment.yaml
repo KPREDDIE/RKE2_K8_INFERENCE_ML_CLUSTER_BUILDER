@@ -1,0 +1,72 @@
+{{- $e := index .Values.engines .Values.engine }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "llm.name" . }}
+  labels: { app: {{ include "llm.name" . }}, engine: {{ .Values.engine }} }
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: 1
+  {{- end }}
+  strategy: { type: Recreate }   # GPUs are scarce; avoid surge pods
+  selector:
+    matchLabels: { app: {{ include "llm.name" . }} }
+  template:
+    metadata:
+      labels: { app: {{ include "llm.name" . }}, engine: {{ .Values.engine }} }
+    spec:
+      runtimeClassName: nvidia
+      nodeSelector: {{ toYaml .Values.gpu.nodeSelector | nindent 8 }}
+      tolerations: {{ toYaml .Values.gpu.tolerations | nindent 8 }}
+      containers:
+        - name: server
+          image: {{ $e.image }}
+          ports: [{ name: http, containerPort: {{ $e.port }} }]
+          {{- if eq .Values.engine "vllm" }}
+          args:
+            - --model={{ .Values.model.name }}
+            - --served-model-name={{ .Values.model.servedName }}
+            - --tensor-parallel-size={{ .Values.gpu.count }}
+            - --host=0.0.0.0
+            - --port={{ $e.port }}
+            {{- range $e.extraArgs }}
+            - {{ . }}
+            {{- end }}
+          {{- else }}
+          command: ["python3", "-m", "sglang.launch_server"]
+          args:
+            - --model-path={{ .Values.model.name }}
+            - --served-model-name={{ .Values.model.servedName }}
+            - --tp={{ .Values.gpu.count }}
+            - --host=0.0.0.0
+            - --port={{ $e.port }}
+            {{- range $e.extraArgs }}
+            - {{ . }}
+            {{- end }}
+          {{- end }}
+          env:
+            - name: HF_HOME
+              value: /models
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef: { name: {{ .Values.model.hfTokenSecret }}, key: HF_TOKEN, optional: true }
+          resources:
+            requests: {{ toYaml .Values.resources.requests | nindent 12 }}
+            limits:
+              nvidia.com/gpu: {{ .Values.gpu.count }}
+              memory: {{ .Values.resources.limits.memory }}
+          volumeMounts:
+            - { name: models, mountPath: /models }
+            - { name: shm, mountPath: /dev/shm }
+          startupProbe:    # large models take minutes to load
+            httpGet: { path: /health, port: http }
+            periodSeconds: 10
+            failureThreshold: 90
+          readinessProbe:
+            httpGet: { path: /health, port: http }
+            periodSeconds: 10
+      volumes:
+        - name: models
+          persistentVolumeClaim: { claimName: {{ include "llm.name" . }}-models }
+        - name: shm
+          emptyDir: { medium: Memory, sizeLimit: 16Gi }

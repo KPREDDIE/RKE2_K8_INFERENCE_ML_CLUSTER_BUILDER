@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "llm.name" . }}-models
+spec:
+  accessModes: [ReadWriteOnce]
+  {{- with .Values.modelCache.storageClass }}
+  storageClassName: {{ . }}
+  {{- end }}
+  resources:
+    requests: { storage: {{ .Values.modelCache.size }} }

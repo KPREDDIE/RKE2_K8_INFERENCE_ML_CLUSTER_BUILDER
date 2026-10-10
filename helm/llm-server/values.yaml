@@ -1,0 +1,54 @@
+# engine: vllm | sglang
+engine: vllm
+
+model:
+  name: meta-llama/Llama-3.1-8B-Instruct
+  servedName: llama-3.1-8b
+  # Secret with key HF_TOKEN for gated models (create it out of band).
+  hfTokenSecret: hf-token
+
+gpu:
+  count: 1            # also used as tensor-parallel size
+  nodeSelector:
+    inference/pool: gpu-inference
+  tolerations:
+    - key: nvidia.com/gpu
+      operator: Exists
+      effect: NoSchedule
+
+engines:
+  vllm:
+    image: vllm/vllm-openai:v0.6.6   # pin to a tested tag
+    port: 8000
+    queueMetric: 'vllm:num_requests_waiting'
+    extraArgs:
+      - --enable-prefix-caching
+      - --gpu-memory-utilization=0.90
+      - --max-model-len=8192
+  sglang:
+    image: lmsysorg/sglang:v0.4.1-cu124   # pin to a tested tag
+    port: 30000
+    queueMetric: 'sglang:num_queue_reqs'
+    extraArgs:
+      - --enable-metrics
+      - --mem-fraction-static=0.88
+      - --context-length=8192
+
+resources:
+  requests: { cpu: "4", memory: 24Gi }
+  limits:   { memory: 48Gi }
+
+modelCache:
+  storageClass: ""     # e.g. longhorn / local-path
+  size: 100Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 4
+  queueThreshold: "4"   # avg waiting requests per replica
+  cooldownSeconds: 300  # model load is slow; scale down gently
+  prometheusAddress: http://kube-prometheus-stack-prometheus.monitoring.svc:9090
+
+serviceMonitor:
+  enabled: true

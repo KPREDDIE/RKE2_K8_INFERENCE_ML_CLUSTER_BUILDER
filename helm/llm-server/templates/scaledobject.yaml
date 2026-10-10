@@ -1,0 +1,18 @@
+{{- if .Values.autoscaling.enabled }}
+{{- $e := index .Values.engines .Values.engine }}
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "llm.name" . }}
+spec:
+  scaleTargetRef: { name: {{ include "llm.name" . }} }
+  minReplicaCount: {{ .Values.autoscaling.minReplicas }}
+  maxReplicaCount: {{ .Values.autoscaling.maxReplicas }}
+  cooldownPeriod: {{ .Values.autoscaling.cooldownSeconds }}
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: {{ .Values.autoscaling.prometheusAddress }}
+        query: sum({{ $e.queueMetric }}{namespace="{{ .Release.Namespace }}",service="{{ include "llm.name" . }}"})
+        threshold: {{ .Values.autoscaling.queueThreshold | quote }}
+{{- end }}

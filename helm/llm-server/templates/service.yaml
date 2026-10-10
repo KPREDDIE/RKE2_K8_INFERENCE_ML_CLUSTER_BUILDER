@@ -1,0 +1,10 @@
+{{- $e := index .Values.engines .Values.engine }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "llm.name" . }}
+  labels: { app: {{ include "llm.name" . }} }
+spec:
+  selector: { app: {{ include "llm.name" . }} }
+  ports:
+    - { name: http, port: 80, targetPort: {{ $e.port }} }
