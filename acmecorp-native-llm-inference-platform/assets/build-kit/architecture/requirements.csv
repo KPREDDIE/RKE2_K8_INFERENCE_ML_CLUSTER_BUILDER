@@ -1,0 +1,11 @@
+id,domain,requirement,implementation,test,evidence,owner,status
+BIZ-01,Business,Alternate engineer can operate demo,runbooks/operations-handoff.md,Observed handoff rehearsal,not-run,Operations,planned
+APP-01,Application,Bounded exact model completion,scripts/smoke.py,completion-canary and streaming-canary,not-run,LLMOps,implemented-not-live-tested
+DATA-01,Data,Exact model revision and all-file hashes,scripts/verify_model.py,Checksum and unexpected-file tests,not-run,Model-owner,implemented-not-live-tested
+TECH-01,Technology,Elemental-managed physical RKE2,scripts/render.py,Enrollment and supported tuple review,not-run,Platform,implemented-not-live-tested
+TECH-02,Technology,Verified GPU resources and runtime digest,scripts/smoke.py,gpu-node-capacity and serving-pods-and-digest,not-run,Platform,implemented-not-live-tested
+SEC-01,Security,Private and restricted workload,scripts/render.py,Network/RBAC negative tests,not-run,Security,implemented-not-live-tested
+SEC-02,Security,Content-free telemetry,observability/otel-collector.yaml,Synthetic leak-canary export audit,not-run,SRE,extension-config-only
+OPS-01,Operations,Rebuild and restore without author,runbooks/day2-operations.md,Isolated restore and worker rebuild,not-run,Operations,planned
+OPS-02,Operations,Measured inference behavior,runbooks/day1-deploy-test.md,Cold/warm workload matrix,not-run,LLMOps,planned
+GOV-01,Security,Independent architecture review,architecture/compliance-review.md,ADM Phase G review,not-run,Architecture,planned

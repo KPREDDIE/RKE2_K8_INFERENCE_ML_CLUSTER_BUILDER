@@ -1,0 +1,3 @@
+host_id,role,supermicro_sku,serial,tpm_identity,bios_bmc,gpu_sku_vram,nic_firmware,install_disk_by_id,model_disk_by_id,os_kernel_driver,network_vlan_mtu,owner,status
+server-01,server,,,,,,,,,,,Platform,unresolved
+gpu-01,gpu,,,,,,,,,,,Platform,unresolved

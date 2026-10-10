@@ -1,0 +1,27 @@
+{
+  "checked_on": "2026-10-09",
+  "status": "upstream-candidates-not-integration-approved",
+  "rke2": "v1.37.1+rke2r1",
+  "rancher_community": "v2.15.2",
+  "elemental_operator": "v1.9.2",
+  "gpu_operator": "v26.7.1",
+  "sglang": "0.5.21",
+  "argo_cd": "v3.5.4",
+  "otel_collector_contrib": "v0.162.0",
+  "model": {
+    "id": "Qwen/Qwen3.6-27B",
+    "revision": "6a9e13bd6fc8f0983b9b99948120bc37f49c13e9"
+  },
+  "support_matrix_status": "unresolved: record supported intersection before deployment",
+  "chart_versions_status": "resolve from chosen vendor channel; application version is not necessarily chart version",
+  "release_sources": {
+    "rke2": "https://github.com/rancher/rke2/releases/tag/v1.37.1%2Brke2r1",
+    "rancher_community": "https://github.com/rancher/rancher/releases/tag/v2.15.2",
+    "elemental_operator": "https://github.com/rancher/elemental-operator/releases/tag/v1.9.2",
+    "gpu_operator": "https://github.com/NVIDIA/gpu-operator/releases/tag/v26.7.1",
+    "sglang": "https://github.com/sgl-project/sglang/releases/tag/v0.5.21",
+    "argo_cd": "https://github.com/argoproj/argo-cd/releases/tag/v3.5.4",
+    "otel_collector_contrib": "https://github.com/open-telemetry/opentelemetry-collector-releases/releases/tag/v0.162.0"
+  },
+  "selection_policy": "Latest upstream stable release observed on checked_on; deployment still requires a site-supported intersection. Never resolve latest during deployment."
+}

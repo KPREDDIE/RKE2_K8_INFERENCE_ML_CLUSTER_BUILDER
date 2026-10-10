@@ -1,0 +1,36 @@
+# Metrics-only OpenTelemetry Collector Contrib configuration extension.
+# Deploy with a digest-pinned image and the metrics-client label in observability.
+# No OTLP receiver: prevents accidental prompt-bearing traces/logs entering this demo path.
+receivers:
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: acmecorp-sglang
+          static_configs:
+            - targets: [sglang.acmecorp-inference.svc.cluster.local:30001]
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 256
+    spike_limit_mib: 64
+  transform/privacy:
+    error_mode: propagate
+    metric_statements:
+      - context: resource
+        statements:
+          - keep_keys(attributes, ["service.name", "service.version"])
+      - context: datapoint
+        statements:
+          - keep_keys(attributes, ["model_name", "job", "instance", "le", "quantile"])
+  batch:
+    timeout: 5s
+    send_batch_size: 512
+exporters:
+  prometheus:
+    endpoint: 0.0.0.0:8889
+service:
+  pipelines:
+    metrics:
+      receivers: [prometheus]
+      processors: [memory_limiter, transform/privacy, batch]
+      exporters: [prometheus]

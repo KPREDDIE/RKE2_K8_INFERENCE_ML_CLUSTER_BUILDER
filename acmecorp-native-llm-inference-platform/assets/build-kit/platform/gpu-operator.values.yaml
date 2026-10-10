@@ -1,0 +1,12 @@
+# Candidate chart values: chart version v26.7.1, resolve all rendered image digests before use.
+# Host image owns NVIDIA driver; do not run a second driver installer.
+driver:
+  enabled: false
+toolkit:
+  env:
+    - name: CONTAINERD_SOCKET
+      value: /run/k3s/containerd/containerd.sock
+cdi:
+  enabled: true
+  default: true
+# No experimental NRI. Verify chart values against the selected chart before rendering.

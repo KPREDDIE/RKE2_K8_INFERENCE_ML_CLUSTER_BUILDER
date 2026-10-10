@@ -1,0 +1,12 @@
+{
+  "cluster_name": "acmecorp-demo",
+  "management_namespace": "fleet-default",
+  "rke2_version": "v1.37.1+rke2r1",
+  "seed_image": null,
+  "compatibility_evidence": null,
+  "ssh_public_key": null,
+  "pools": [
+    {"name": "server", "quantity": 1, "install_device": null},
+    {"name": "gpu", "quantity": 1, "install_device": null}
+  ]
+}

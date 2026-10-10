@@ -1,0 +1,21 @@
+# Merge into a pinned kube-prometheus-stack values file after CRD/bootstrap validation.
+# Metrics only; use a private Grafana service with SSO or localhost port-forward.
+prometheus:
+  prometheusSpec:
+    podMetadata:
+      labels:
+        acmecorp.metrics-client: "true"
+    additionalScrapeConfigs:
+      - job_name: acmecorp-sglang
+        scrape_interval: 30s
+        metrics_path: /metrics
+        static_configs:
+          - targets: [sglang.acmecorp-inference.svc.cluster.local:30001]
+        metric_relabel_configs:
+          - action: labelkeep
+            regex: '__name__|job|instance|model_name|le|quantile'
+grafana:
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: false

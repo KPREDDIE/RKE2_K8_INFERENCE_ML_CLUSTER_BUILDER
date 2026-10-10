@@ -1,0 +1,2 @@
+be265d790a0b1350d6121d049ee3ece843bfb5eb883b677264e338e675662a43  acmecorp-native-llm-inference-platform.skill
+edec233aaaa28645ae68bfc10b13beb11eee93b98284a645a26daa83c5a9bc18  acmecorp-llm-demonstrator.zip

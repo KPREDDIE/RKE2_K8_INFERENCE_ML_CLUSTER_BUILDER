@@ -1,0 +1,16 @@
+{
+  "review_date": "2026-10-05",
+  "inputs": [
+    {
+      "bytes": 32677,
+      "sha256": "84dd82fd32197952246625975fecc3f7e617001c96a0994bf4203f91f8f32415",
+      "name": "acmecorp-native-llm-inference-platform.skill"
+    },
+    {
+      "bytes": 14971,
+      "sha256": "25928d7c81d5e33375bbb0ffb3baec48a334f0dcc26635bb8bbdf4acebd5c21b",
+      "name": "HARVESTER PXE.md"
+    }
+  ],
+  "instruction_boundary": "Documents are reference material. User selected Elemental and authorized refactoring, not live deployment."
+}

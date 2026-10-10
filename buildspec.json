@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "python_minimum": "3.12",
+  "baseline": "acmecorp-native-llm-inference-platform/assets/build-kit/versions/candidates.json",
+  "stages": ["validate", "package"],
+  "deployment": "manual-review-and-gitops-only"
+}

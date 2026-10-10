@@ -1,0 +1,11 @@
+.env
+.env.local
+__pycache__/
+*.pyc
+generated/
+evidence/
+*.kubeconfig
+*.token
+*.iso
+*.raw
+cdktf.out/
